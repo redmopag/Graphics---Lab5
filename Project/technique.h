@@ -33,7 +33,7 @@ public:
     virtual bool Init();
 
     void Enable();
-    
+
 protected:
 
     bool AddShader(GLenum ShaderType, const char* pShaderText);

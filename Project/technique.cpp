@@ -24,6 +24,8 @@
 #include "util.h"
 
 static const char* pVSName = "VS";
+static const char* pTessCSName = "TessCS";
+static const char* pTessESName = "TessES";
 static const char* pGSName = "GS";
 static const char* pFSName = "FS";
 
@@ -32,6 +34,10 @@ const char* ShaderType2ShaderName(GLuint Type)
     switch (Type) {
         case GL_VERTEX_SHADER:
             return pVSName;
+        case GL_TESS_CONTROL_SHADER:
+            return pTessCSName;
+        case GL_TESS_EVALUATION_SHADER:
+            return pTessESName;
         case GL_GEOMETRY_SHADER:
             return pGSName;
         case GL_FRAGMENT_SHADER:
@@ -42,7 +48,6 @@ const char* ShaderType2ShaderName(GLuint Type)
 
     return NULL;
 }
-
 
 Technique::Technique()
 {
@@ -82,7 +87,7 @@ bool Technique::Init()
 
 // Use this method to add shaders to the program. When finished - call finalize()
 bool Technique::AddShader(GLenum ShaderType, const char* pShaderText)
-{  
+{
     GLuint ShaderObj = glCreateShader(ShaderType);
 
     if (ShaderObj == 0) {
@@ -115,6 +120,7 @@ bool Technique::AddShader(GLenum ShaderType, const char* pShaderText)
 
     return GLCheckError();
 }
+
 
 // After all the shaders have been added to the program call this function
 // to link and validate the program.

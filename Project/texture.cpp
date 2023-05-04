@@ -1,7 +1,7 @@
 #include <iostream>
 #include "texture.h"
 // Для вывода ошибки и упрощения типа переменной
-#include "ogldev_util.h"
+#include "util.h"
 // Библиотеки для загрузки фото в GLUT
 #include "3rdparty/stb_image.h"
 #include "3rdparty/stb_image_write.h"

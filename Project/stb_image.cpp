@@ -1,4 +1,4 @@
-#include "ogldev_util.h"
+#include "util.h"
 #define STB_IMAGE_IMPLEMENTATION // Определение, нужное для работы библиотеки
 #define STBI_FAILURE_USERMSG // Определение, нужное для лучшего вывода ошибок
 #include "3rdparty/stb_image.h"

@@ -16,44 +16,27 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TECHNIQUE_H
-#define	TECHNIQUE_H
+#ifndef RANDOM_TEXTURE_H
+#define	RANDOM_TEXTURE_H
 
-#include <list>
 #include <GL/glew.h>
 
-class Technique
+class RandomTexture
 {
 public:
+    RandomTexture();
 
-    Technique();
-
-    ~Technique();
-
-    virtual bool Init();
-
-    void Enable();
+    ~RandomTexture();
     
-protected:
+    bool InitRandomTexture(unsigned int Size);
 
-    bool AddShader(GLenum ShaderType, const char* pShaderText);
+    void Bind(GLenum TextureUnit);
 
-    bool Finalize();
-
-    GLint GetUniformLocation(const char* pUniformName);
-    
-    GLint GetProgramParam(GLint param);
-    
-    GLuint m_shaderProg;    
-    
 private:
-
-    typedef std::list<GLuint> ShaderObjList;
-    ShaderObjList m_shaderObjList;
+    GLuint m_textureObj;
 };
 
-#define INVALID_UNIFORM_LOCATION 0xFFFFFFFF
 
 
-#endif	/* TECHNIQUE_H */
+#endif	/* RANDOM_TEXTURE_H */
 

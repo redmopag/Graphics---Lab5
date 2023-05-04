@@ -5,6 +5,7 @@
 // Библиотеки для загрузки фото в GLUT
 #include "3rdparty/stb_image.h"
 #include "3rdparty/stb_image_write.h"
+#include "ogldev_util.h"
 
 
 Texture::Texture(GLenum TextureTarget, const std::string& FileName)

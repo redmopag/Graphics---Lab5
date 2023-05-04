@@ -2,7 +2,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include "engine_common.h"
-//#include "ogldev_util.h"
+#include "ogldev_util.h"
 #include "pipeline.h"
 #include "camera.h"
 #include "texture.h"
@@ -15,9 +15,9 @@
 #define WINDOW_WIDTH  1280  
 #define WINDOW_HEIGHT 1024
 
-const int NUM_ROWS = 50;
-const int NUM_COLS = 20;
-const int NUM_INSTANCES = NUM_ROWS * NUM_COLS;
+#define NUM_ROWS 50
+#define NUM_COLS 20
+#define NUM_INSTANCES NUM_ROWS * NUM_COLS
 
 
 class Tutorial33 : public ICallbacks
@@ -80,7 +80,7 @@ public:
 
         m_pMesh = new Mesh();
 
-        if (!m_pMesh->LoadMesh("../Content/spider.obj")) {
+        if (!m_pMesh->LoadMesh("../Content/phoenix_ugv.md2")) {
             return false;            
         }
         
@@ -214,7 +214,7 @@ private:
             }
         }                   
     }
-    
+
     LightingTechnique* m_pEffect;
     Camera* m_pGameCamera;
     float m_scale;

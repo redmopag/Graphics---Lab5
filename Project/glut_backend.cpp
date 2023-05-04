@@ -1,62 +1,101 @@
+/*
+
+    Copyright 2011 Etay Meiri
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <stdio.h>
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
+#include "util.h"
 #include "glut_backend.h"
 
+// Points to the object implementing the ICallbacks interface which was delivered to
+// GLUTBackendRun(). All events are forwarded to this object.
 static ICallbacks* s_pCallbacks = NULL;
 
-// Матрёшка нужна для использования в функциях обратного вызова glut
-static void SpecialKeyboardCB(int Key, int x, int y) {
+static void SpecialKeyboardCB(int Key, int x, int y)
+{
     s_pCallbacks->SpecialKeyboardCB(Key, x, y);
 }
 
-static void KeyboardCB(unsigned char Key, int x, int y) {
+
+static void KeyboardCB(unsigned char Key, int x, int y)
+{
     s_pCallbacks->KeyboardCB(Key, x, y);
 }
 
-static void PassiveMouseCB(int x, int y) {
+
+static void PassiveMouseCB(int x, int y)
+{
     s_pCallbacks->PassiveMouseCB(x, y);
 }
 
-static void RenderSceneCB() {
+
+static void RenderSceneCB()
+{
     s_pCallbacks->RenderSceneCB();
 }
 
-static void IdleCB() {
+
+static void IdleCB()
+{
     s_pCallbacks->IdleCB();
 }
 
-// Инициализация функций обратного вызова glut
-static void InitCallbacks() {
+
+static void MouseCB(int Button, int State, int x, int y)
+{
+    s_pCallbacks->MouseCB(Button, State, x, y);
+}
+
+
+static void InitCallbacks()
+{
     glutDisplayFunc(RenderSceneCB);
     glutIdleFunc(IdleCB);
     glutSpecialFunc(SpecialKeyboardCB);
     glutPassiveMotionFunc(PassiveMouseCB);
     glutKeyboardFunc(KeyboardCB);
+    glutMouseFunc(MouseCB);
 }
 
-// Инициализация glut
-void GLUTBackendInit(int argc, char** argv) {
-    glutInit(&argc, argv); // Инициализация glut
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH); // Настройка отображения
-    glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS); // Настройка опций glut
+
+void GLUTBackendInit(int argc, char** argv)
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+    glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 }
 
-// Создание экрана
-bool GLUTBackendCreateWindow(unsigned int Width, unsigned int Height, unsigned int bpp, bool isFullScreen, const char* pTitle) {
-    if (isFullScreen) { // Если флаг полного экрана, то полный экран
+
+bool GLUTBackendCreateWindow(unsigned int Width, unsigned int Height, unsigned int bpp, bool isFullScreen, const char* pTitle)
+{
+    if (isFullScreen) {
         char ModeString[64] = { 0 };
-        snprintf(ModeString, sizeof(ModeString), "%dx%d@%d", Width, Height, bpp);
+        SNPRINTF(ModeString, sizeof(ModeString), "%dx%d@%d", Width, Height, bpp);
         glutGameModeString(ModeString);
         glutEnterGameMode();
     }
-    else { // Иначе по обычному
+    else {
         glutInitWindowSize(Width, Height);
         glutCreateWindow(pTitle);
     }
 
-    // Создание и проверка glew
+    // Must be done after glut is initialized!
     GLenum res = glewInit();
     if (res != GLEW_OK) {
         fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
@@ -66,25 +105,20 @@ bool GLUTBackendCreateWindow(unsigned int Width, unsigned int Height, unsigned i
     return true;
 }
 
-// Запуск бекэнда glut и настройка цветов и текстуры
-void GLUTBackendRun(ICallbacks* pCallbacks) {
+void GLUTBackendRun(ICallbacks* pCallbacks)
+{
     if (!pCallbacks) {
         fprintf(stderr, "%s : callbacks not specified!\n", __FUNCTION__);
         return;
     }
 
-    // Глубина
-    glEnable(GL_DEPTH_TEST);
-
-    // Цвет и улучшение текстуры
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glFrontFace(GL_CW);
     glCullFace(GL_BACK);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
 
-    // Инициализация функций обратного вызова
     s_pCallbacks = pCallbacks;
     InitCallbacks();
-    // Основной цикл glut
     glutMainLoop();
 }

@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <ogldev_util.h>
+#include <time.h>
 
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 
